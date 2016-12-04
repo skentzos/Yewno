@@ -35,19 +35,19 @@ class SimilarWordFinder(object):
         pxy = len(self.posts_with_word[x] & self.posts_with_word[y]) / self.total_posts
         px = self.counts[x] / self.total_posts
         py = self.counts[y] / self.total_posts
-        pp = self.calculate_score(pxy, px, py) if pxy * px * py > 0 else 0
+        pp = self.calculate_score(pxy, px, py) if pxy > 0 else 0
 
         # x, not y case
         pxy = len(self.posts_with_word[x] - self.posts_with_word[y]) / self.total_posts
         px = self.counts[x] / self.total_posts
         py = (self.total_posts - self.counts[y]) / self.total_posts
-        pn = self.calculate_score(pxy, px, py) if pxy * px * py > 0 else 0
+        pn = self.calculate_score(pxy, px, py) if pxy > 0 else 0
 
         # not x, y case
         pxy = len(self.posts_with_word[y] - self.posts_with_word[x]) / self.total_posts
         px = (self.total_posts - self.counts[x]) / self.total_posts
         py = self.counts[y] / self.total_posts
-        np = self.calculate_score(pxy, px, py) if pxy * px * py > 0 else 0
+        np = self.calculate_score(pxy, px, py) if pxy > 0 else 0
 
         # not x, not y case
         pxy = (self.total_posts -
@@ -56,7 +56,7 @@ class SimilarWordFinder(object):
                len(self.posts_with_word[x] & self.posts_with_word[y])) / self.total_posts
         px = (self.total_posts - self.counts[x]) / self.total_posts
         py = (self.total_posts - self.counts[y]) / self.total_posts
-        nn = self.calculate_score(pxy, px, py) if pxy * px * py > 0 else 0
+        nn = self.calculate_score(pxy, px, py) if pxy > 0 else 0
 
         return pp + pn + np + nn
 
