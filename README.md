@@ -8,11 +8,12 @@ File handler has hard-coded cutoffs, base on corpus definition. Wouldn't work on
 
 XML handler could be better with weird encoding issues for parsing. I figured a few errors was fine.
 
-String handler could be a lot more sophisticated. TODOs were left in to describe ways.
+String handler could be a lot more sophisticated. TODOs were left in to describe some ways to improve.
 
 In a production environment, I'd save the processed corpus stats in process_docs to avoid recomputing each time.
 Also, the task of determining the posts in which a term occurs would be parallelized and reduced,
- since the term search is completely parallelizable. As is
+ since the term search is completely parallelizable. As is calculation of similarity scores.
+Also, I'd add in tests and whatever else is part of the code architecture.
 
 
 
@@ -50,3 +51,5 @@ All blogs
  ('ontario', 7.683919044317009e-05),
  ('vancouver', 7.494338337162167e-05)]
 Time:  302.42445612
+
+Timing ends up being on the order of 50 blogs per second.
