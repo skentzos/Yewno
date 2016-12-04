@@ -61,7 +61,7 @@ class similar_word_finder(object):
 
     @staticmethod
     def calculate_score(pxy, px, py):
-        return pxy*math.log(pxy/(px*py))
+        return pxy * math.log(pxy / (px * py))
 
 if __name__ == "__main__":
     from pprint import pprint
@@ -71,6 +71,5 @@ if __name__ == "__main__":
     #pprint(swf.total_posts)
     #pprint(swf.posts_with_word['winnipeg'])
     #pprint(swf.posts_with_word['with'])
-    #pprint(swf.posts_with_both_words['winnipeg']['with'])
 
     pprint(swf.get_similarity_score('winnipeg', 'with'))
