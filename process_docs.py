@@ -12,7 +12,8 @@ class similar_word_finder(object):
 
         fi = filename_iterator(path, group=group)
 
-        for filename in fi:
+        #for filename in [fi.next(), fi.next(), fi.next(), fi.next()]:      # Grab a few files for debugging
+        for filename in fi:                                                 # Iterate over files
             for post in get_posts_from_xml_file(filename):
                 self.total_posts += 1                                       # Track total number of posts seen.
 
@@ -34,19 +35,19 @@ class similar_word_finder(object):
         pxy = len(self.posts_with_word[x] & self.posts_with_word[y]) / self.total_posts
         px = self.counts[x] / self.total_posts
         py = self.counts[y] / self.total_posts
-        pp = self.calculate_score(pxy, px, py)
+        pp = self.calculate_score(pxy, px, py) if pxy * px * py > 0 else 0
 
         # x, not y case
         pxy = len(self.posts_with_word[x] - self.posts_with_word[y]) / self.total_posts
         px = self.counts[x] / self.total_posts
         py = (self.total_posts - self.counts[y]) / self.total_posts
-        pn = self.calculate_score(pxy, px, py)
+        pn = self.calculate_score(pxy, px, py) if pxy * px * py > 0 else 0
 
         # not x, y case
         pxy = len(self.posts_with_word[y] - self.posts_with_word[x]) / self.total_posts
         px = (self.total_posts - self.counts[x]) / self.total_posts
         py = self.counts[y] / self.total_posts
-        np = self.calculate_score(pxy, px, py)
+        np = self.calculate_score(pxy, px, py) if pxy * px * py > 0 else 0
 
         # not x, not y case
         pxy = (self.total_posts -
@@ -55,13 +56,23 @@ class similar_word_finder(object):
                len(self.posts_with_word[x] & self.posts_with_word[y])) / self.total_posts
         px = (self.total_posts - self.counts[x]) / self.total_posts
         py = (self.total_posts - self.counts[y]) / self.total_posts
-        nn = self.calculate_score(pxy, px, py)
+        nn = self.calculate_score(pxy, px, py) if pxy * px * py > 0 else 0
 
         return pp + pn + np + nn
 
     @staticmethod
     def calculate_score(pxy, px, py):
         return pxy * math.log(pxy / (px * py))
+
+    def get_most_similar_words(self, probe, num_words):
+        similarity_scores = {}
+        for key in self.posts_with_word:
+            if key != probe:
+                similarity_scores[key] = self.get_similarity_score(probe, key)
+
+        return sorted(similarity_scores.items(), key=lambda x: x[1], reverse=True)[0:num_words]
+
+
 
 if __name__ == "__main__":
     from pprint import pprint
@@ -73,3 +84,5 @@ if __name__ == "__main__":
     #pprint(swf.posts_with_word['with'])
 
     pprint(swf.get_similarity_score('winnipeg', 'with'))
+
+    pprint(swf.get_most_similar_words('winnipeg', 5))
